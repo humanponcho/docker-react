@@ -16,9 +16,10 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --target builder --tag my-image-name:latest
 
+    # - name: Run tests
+    #   run: docker build . --file Dockerfile --target tester --tag my-test-image:latest && docker run --rm my-test-image:latest
     - name: Run tests
-      run: docker build . --file Dockerfile --target tester --tag my-test-image:latest && docker run --rm my-test-image:latest
-
+      run: docker run --rm my-image-name:latest npm test -- --coverage
     - name: Build and push Docker image for deployment
       run: docker build . --file Dockerfile --tag my-deploy-image:latest
 
