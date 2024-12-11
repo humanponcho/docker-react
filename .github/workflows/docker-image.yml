@@ -1,0 +1,40 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "vite/migration" ]
+  pull_request:
+    branches: [ "vite/migration" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --target builder --tag my-image-name:latest
+
+    # - name: Run tests
+    #   run: docker build . --file Dockerfile --target tester --tag my-test-image:latest && docker run --rm my-test-image:latest
+    - name: Run tests
+      run: docker run --rm my-image-name:latest npm test -- --coverage
+    - name: Build and push Docker image for deployment
+      run: docker build . --file Dockerfile --tag my-deploy-image:latest
+
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v2
+    #   with:
+    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws-region: us-west-2
+
+    # - name: Deploy to Elastic Beanstalk
+    #   uses: einaregilsson/beanstalk-deploy@v20
+    #   with:
+    #     application-name: my-application
+    #     environment-name: my-environment
+    #     version-label: ${{ github.sha }}
+    #     region: us-west-2
+    #     deployment-package: my-deployment-package.zip
