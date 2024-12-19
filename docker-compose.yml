@@ -1,4 +1,3 @@
-version: '3'
 services:
   web:
     build: 
@@ -16,4 +15,4 @@ services:
     volumes:
       - /app/node_modules
       - .:/app
-    command: ["npm", "run", "test"]    
+    command: npm test
